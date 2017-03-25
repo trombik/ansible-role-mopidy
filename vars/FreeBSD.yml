@@ -1,0 +1,2 @@
+__mopidy_db_dir: /var/db/mopidy
+__mopidy_conf_dir: /usr/local/etc/mopidy

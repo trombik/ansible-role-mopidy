@@ -1,0 +1,6 @@
+---
+
+- name: Install mopidy
+  pkgng:
+    name: mopidy
+    state: present

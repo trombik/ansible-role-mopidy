@@ -1,0 +1,8 @@
+mopidy_user: mopidy
+mopidy_group: mopidy
+mopidy_log_dir: /var/log/mopidy
+mopidy_db_dir: "{{ __mopidy_db_dir }}"
+mopidy_service: mopidy
+mopidy_conf_dir: "{{ __mopidy_conf_dir }}"
+mopidy_conf_file: "{{ __mopidy_conf_dir }}/mopidy.conf"
+mopidy_flags: ""

@@ -1,0 +1,37 @@
+---
+# tasks file for ansible-role-mopidy
+
+- include_vars: "{{ ansible_os_family }}.yml"
+
+- include: "install-{{ ansible_os_family }}.yml"
+
+- name: Create log directory
+  file:
+    path: "{{ mopidy_log_dir }}"
+    mode: 0755
+    owner: "{{ mopidy_user }}"
+    group: "{{ mopidy_group }}"
+    state: directory
+  notify: Restart mopidy
+
+- name: Create db directory
+  file:
+    path: "{{ mopidy_db_dir }}"
+    mode: 0755
+    owner: "{{ mopidy_user }}"
+    group: "{{ mopidy_group }}"
+    state: directory
+  notify: Restart mopidy
+
+- name: Create mopidy.conf
+  template:
+    src: mopidy.conf.j2
+    dest: "{{ mopidy_conf_file }}"
+    validate: echo %s
+  notify: Restart mopidy
+
+- name: Start mopidy
+  service:
+    name: "{{ mopidy_service }}"
+    enabled: true
+    state: started
