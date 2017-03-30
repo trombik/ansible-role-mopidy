@@ -2,4 +2,9 @@
   roles:
     - ansible-role-mopidy
   vars:
-    mopidy_config: ""
+    mopidy_conf: {}
+    apt_repo_keys_to_add:
+      - https://apt.mopidy.com/mopidy.gpg
+    apt_repo_to_add: []
+      # - "deb http://apt.mopidy.com/ {{ ansible_distribution_release }} main contrib non-free"
+      # - "deb http://apt.mopidy.com/ jessie main contrib non-free"

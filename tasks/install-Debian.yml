@@ -1,0 +1,6 @@
+---
+
+- name: Install Mopidy
+  apt:
+    name: mopidy
+    state: present

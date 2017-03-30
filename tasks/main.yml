@@ -3,6 +3,38 @@
 
 - include_vars: "{{ ansible_os_family }}.yml"
 
+- set_fact:
+    mopidy_config_merged: "{{ mopidy_config_default | combine(mopidy_config) }}"
+
+- set_fact:
+    mopidy_logging_config_merged: "{{ mopidy_logging_config_default | combine(mopidy_logging_config) }}"
+
+- assert:
+    that:
+      - "'core' in mopidy_config_merged"
+      - "'logging' in mopidy_config_merged"
+      - "'local' in mopidy_config_merged"
+      - "'m3u' in mopidy_config_merged"
+
+- assert:
+    that:
+      - "'cache_dir' in mopidy_config_merged['core']"
+      - "'config_dir' in mopidy_config_merged['core']"
+      - "'data_dir' in mopidy_config_merged['core']"
+
+- assert:
+    that:
+      - "'config_file' in mopidy_config_merged['logging']"
+      - "'debug_file' in mopidy_config_merged['logging']"
+
+- assert:
+    that:
+      - "'media_dir' in mopidy_config_merged['local']"
+
+- assert:
+    that:
+      - "'playlists_dir' in mopidy_config_merged['m3u']"
+
 - include: "install-{{ ansible_os_family }}.yml"
 
 - name: Create log directory
@@ -14,9 +46,31 @@
     state: directory
   notify: Restart mopidy
 
-- name: Create db directory
+- name: Create cache_dir, config_dir and data_dir
   file:
-    path: "{{ mopidy_db_dir }}"
+    path: "{{ item }}"
+    mode: 0755
+    owner: "{{ mopidy_user }}"
+    group: "{{ mopidy_group }}"
+    state: directory
+  with_items:
+    - "{{ mopidy_config_merged['core']['cache_dir'] }}"
+    - "{{ mopidy_config_merged['core']['config_dir'] }}"
+    - "{{ mopidy_config_merged['core']['data_dir'] }}"
+  notify: Restart mopidy
+
+- name: Create media_dir
+  file:
+    path: "{{ mopidy_config_merged['local']['media_dir'] }}"
+    mode: 0755
+    owner: "{{ mopidy_user }}"
+    group: "{{ mopidy_group }}"
+    state: directory
+  notify: Restart mopidy
+
+- name: Create playlists_dir
+  file:
+    path: "{{ mopidy_config_merged['m3u']['playlists_dir'] }}"
     mode: 0755
     owner: "{{ mopidy_user }}"
     group: "{{ mopidy_group }}"
@@ -27,7 +81,14 @@
   template:
     src: mopidy.conf.j2
     dest: "{{ mopidy_conf_file }}"
-    validate: echo %s
+    # validate: echo %s
+  notify: Restart mopidy
+
+- name: Create logging.conf
+  template:
+    src: logging.conf.j2
+    dest: "{{ mopidy_config_merged['logging']['config_file'] }}"
+    # validate: echo %s
   notify: Restart mopidy
 
 - name: Start mopidy

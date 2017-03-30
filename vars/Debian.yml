@@ -1,0 +1,11 @@
+---
+__mopidy_user: mopidy
+__mopidy_group: audio
+__mopidy_service: mopidy
+__mopidy_core_cache_dir: /var/cache/mopidy
+__mopidy_core_config_dir: /etc/mopidy
+__mopidy_core_data_dir: /var/lib/mopidy
+__mopidy_logging_config_file: /etc/mopidy/logging.conf
+__mopidy_logging_debug_file: /var/log/mopidy/mopidy-debug.log
+__mopidy_local_media_dir: /var/lib/mopidy/media
+__mopidy_m3u_playlists_dir: /var/lib/mopidy/playlists

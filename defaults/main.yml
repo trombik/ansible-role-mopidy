@@ -1,8 +1,47 @@
-mopidy_user: mopidy
-mopidy_group: mopidy
+mopidy_user: "{{ __mopidy_user }}"
+mopidy_group: "{{ __mopidy_group }}"
 mopidy_log_dir: /var/log/mopidy
-mopidy_db_dir: "{{ __mopidy_db_dir }}"
-mopidy_service: mopidy
-mopidy_conf_dir: "{{ __mopidy_conf_dir }}"
-mopidy_conf_file: "{{ __mopidy_conf_dir }}/mopidy.conf"
+mopidy_service: "{{ __mopidy_service }}"
+mopidy_conf_file: "{{ __mopidy_core_config_dir }}/mopidy.conf"
 mopidy_flags: ""
+
+mopidy_core_cache_dir: "{{ __mopidy_core_cache_dir }}"
+mopidy_core_config_dir: "{{ __mopidy_core_config_dir }}"
+mopidy_core_data_dir: "{{ __mopidy_core_data_dir }}"
+mopidy_logging_config_file: "{{ __mopidy_logging_config_file }}"
+mopidy_logging_debug_file: "{{ __mopidy_logging_debug_file }}"
+mopidy_local_media_dir: "{{ __mopidy_local_media_dir }}"
+mopidy_m3u_playlists_dir: "{{ __mopidy_m3u_playlists_dir }}"
+
+mopidy_config: {}
+mopidy_config_default:
+  core:
+    cache_dir: "{{ mopidy_core_cache_dir }}"
+    config_dir: "{{ mopidy_core_config_dir }}"
+    data_dir: "{{ mopidy_core_data_dir }}"
+  logging:
+    config_file: "{{ mopidy_logging_config_file }}"
+    debug_file: "{{ mopidy_logging_debug_file }}"
+  local:
+    media_dir: "{{ mopidy_local_media_dir }}"
+  m3u:
+    playlists_dir: "{{ mopidy_m3u_playlists_dir }}"
+
+mopidy_logging_config: {}
+mopidy_logging_config_default:
+  loggers:
+    keys: root
+  handlers:
+    keys: fileHandler
+  formatters:
+    keys: simpleFormatter
+  logger_root:
+    handlers: fileHandler
+  handler_fileHandler:
+    class: FileHandler
+    formatter: simpleFormatter
+    level: INFO
+    args: "('{{ mopidy_log_dir }}/mopidy.log',)"
+  formatter_simpleFormatter:
+    format: "%(asctime)s %(levelname)s [%(process)d:%(threadName)s] %(name)s: %(message)s"
+    datefmt: ""
